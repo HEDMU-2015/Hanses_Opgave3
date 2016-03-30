@@ -12,4 +12,6 @@ public interface Organization {
 
 	public List<Long> getAllChildren(long id);
 	
+	public List<OrganizationUnit> getAllOrganizationsWithoutParents();
+
 }
