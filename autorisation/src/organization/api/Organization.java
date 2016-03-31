@@ -13,5 +13,7 @@ public interface Organization {
 	public List<Long> getAllChildren(long id);
 	
 	public List<OrganizationUnit> getAllOrganizationsWithoutParents();
+	
+	public List<OrganizationUnit> searchOrganization(String search);
 
 }
