@@ -1,6 +1,7 @@
 package security.logic;
 
 import java.util.List;
+import java.util.Optional;
 
 import organization.domain.OrganizationUnit;
 import security.api.Security;
@@ -9,18 +10,24 @@ import security.domain.User;
 import security.domain.UserPermission;
 
 public class SecurityImpl implements Security {
+	DataAcces da;
+	SecurityDataImpl mapper = new SecurityDataImpl();
 
 	@Override
 	public boolean login(String userId, String encryptedPassword) {
+		da = new DataAccess();
+		return new LogicTrans<Boolean>.transaction(()->checkUser(userid, encryptedPassword));
+	}
+	
+	private boolean checkUser(String userId, String encryptedPassword) {
 		boolean rc = false;
-		DataAccess da = new DataAccess();
-		SecurityDataImpl mapper = new SecurityDataImpl();
-		User user = mapper.getUser(da, userId);
-		if (user.getEncryptedPassword().equals(encryptedPassword)) {
+		Optional<User> user = mapper.getUser(da, userId, encryptedPassword);
+		if (user.isPresent()) {
 			rc = true;
 			UserLoggedInEager.instance().setId(userId);
 		}
 		return rc;
+		
 	}
 
 	@Override
