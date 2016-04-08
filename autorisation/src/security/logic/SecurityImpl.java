@@ -10,21 +10,22 @@ import security.domain.User;
 import security.domain.UserPermission;
 
 public class SecurityImpl implements Security {
-	DataAcces da;
 	SecurityDataImpl mapper = new SecurityDataImpl();
 
 	@Override
 	public boolean login(String userId, String encryptedPassword) {
-		da = new DataAccess();
-		return new LogicTrans<Boolean>.transaction(()->checkUser(userid, encryptedPassword));
+		DataAccess da = new DataAccess();
+		return new LogicTrans<Boolean>(da).transaction(()->checkUser(userid, encryptedPassword));
 	}
 	
-	private boolean checkUser(String userId, String encryptedPassword) {
+	private Boolean checkUser(String userId, String encryptedPassword) {
 		boolean rc = false;
-		Optional<User> user = mapper.getUser(da, userId, encryptedPassword);
-		if (user.isPresent()) {
+		Optional<User> ouser = mapper.getUser(da, userId, encryptedPassword);
+		if (ouser.isPresent()) {
 			rc = true;
-			UserLoggedInEager.instance().setId(userId);
+			User user = new User();
+			user.setId(userId);
+			UserLoggedInEager.instance().setUser(user);
 		}
 		return rc;
 		
@@ -32,13 +33,13 @@ public class SecurityImpl implements Security {
 
 	@Override
 	public User getUser(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		DataAccess da = new DataAccess();
+		return new LogicTrans<User>(da).transaction(()->mapper.getUser(da, userId));
 	}
 
 	@Override
 	public String getIdOfUserLoggedIn() {
-		return UserLoggedInEager.instance().getId();
+		return UserLoggedInEager.instance().getUser().getId();
 	}
 
 	@Override
