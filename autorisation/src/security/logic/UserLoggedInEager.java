@@ -1,10 +1,8 @@
 package security.logic;
 
-import security.domain.User;
-
 public class UserLoggedInEager {
 	private static UserLoggedInEager userloggedin = new UserLoggedInEager();
-	private User user = null;
+	private String userid = null;
 	
 	private UserLoggedInEager() {
 	}
@@ -13,12 +11,12 @@ public class UserLoggedInEager {
 		return userloggedin;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserid() {
+		return userid;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 }

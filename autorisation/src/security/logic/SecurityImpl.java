@@ -5,27 +5,28 @@ import java.util.Optional;
 
 import organization.domain.OrganizationUnit;
 import security.api.Security;
+import security.data.SecurityDataMapperImpl;
 import security.domain.Permission;
 import security.domain.User;
 import security.domain.UserPermission;
+import util.DataAccess;
+import util.LogicTrans;
 
 public class SecurityImpl implements Security {
-	SecurityDataImpl mapper = new SecurityDataImpl();
+	SecurityDataMapperImpl mapper = new SecurityDataMapperImpl();
 
 	@Override
 	public boolean login(String userId, String encryptedPassword) {
 		DataAccess da = new DataAccess();
-		return new LogicTrans<Boolean>(da).transaction(()->checkUser(userid, encryptedPassword));
+		return new LogicTrans<Boolean>(da).transaction(()->checkUser(da, userId, encryptedPassword));
 	}
 	
-	private Boolean checkUser(String userId, String encryptedPassword) {
+	private Boolean checkUser(DataAccess da, String userId, String encryptedPassword) {
 		boolean rc = false;
-		Optional<User> ouser = mapper.getUser(da, userId, encryptedPassword);
-		if (ouser.isPresent()) {
+		Optional<User> user = mapper.getUser(da, userId, encryptedPassword);
+		if (user.isPresent()) {
 			rc = true;
-			User user = new User();
-			user.setId(userId);
-			UserLoggedInEager.instance().setUser(user);
+			UserLoggedInEager.instance().setUserid(userId);
 		}
 		return rc;
 		
@@ -34,12 +35,17 @@ public class SecurityImpl implements Security {
 	@Override
 	public User getUser(String userId) {
 		DataAccess da = new DataAccess();
-		return new LogicTrans<User>(da).transaction(()->mapper.getUser(da, userId));
+		Optional<User> user = new LogicTrans<Optional<User>>(da).transaction(()->mapper.getUser(da, userId));
+		if (user.isPresent()) {
+			return user.get();
+		} else {
+			throw new RuntimeException("User with id = " + userId + " not found");
+		}
 	}
 
 	@Override
 	public String getIdOfUserLoggedIn() {
-		return UserLoggedInEager.instance().getUser().getId();
+		return UserLoggedInEager.instance().getUserid();
 	}
 
 	@Override

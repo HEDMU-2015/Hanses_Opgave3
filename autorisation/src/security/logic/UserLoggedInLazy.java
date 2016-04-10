@@ -4,7 +4,7 @@ import security.domain.User;
 
 public class UserLoggedInLazy {
 	private static UserLoggedInLazy userloggedin = null;
-	private User user = null;
+	private String userid = null;
 	
 	private UserLoggedInLazy() {
 	}
@@ -16,12 +16,12 @@ public class UserLoggedInLazy {
 		return userloggedin;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserid() {
+		return userid;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 }
