@@ -5,7 +5,7 @@ import java.util.List;
 import organization.domain.OrganizationUnit;
 
 /**
- * Interface (API) for Service Organization
+ * Interface (API) for service Organization
  *  
  * @author hi
  *

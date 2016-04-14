@@ -1,7 +1,5 @@
 package security.logic;
 
-import security.domain.User;
-
 public class UserLoggedInLazy {
 	private static UserLoggedInLazy userloggedin = null;
 	private String userid = null;

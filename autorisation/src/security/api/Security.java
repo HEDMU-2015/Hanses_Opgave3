@@ -7,8 +7,9 @@ import security.domain.Permission;
 import security.domain.User;
 import security.domain.UserPermission;
 
+
 /**
- * Interface (API) for Service Security
+ * Interface (API) for service Security
  * 
  * @author hi
  *
@@ -20,12 +21,21 @@ public interface Security {
 	 * 
 	 * @param userId
 	 * @param encryptedPassword
-	 * @return true, if login succesfull
+	 * @return true if userid and password is correct
 	 */
 	public boolean login(String userId, String encryptedPassword);
 	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	public User getUser(String userId);
 	
+	/**
+	 * 
+	 * @return The id of the user logged in, or null if no user is logged in
+	 */
 	public String getIdOfUserLoggedIn();
 	
 	public Permission getPermission(int permissionId);
